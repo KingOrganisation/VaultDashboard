@@ -1,8 +1,7 @@
 import axios from "axios";
-import { serialize } from "cookie";
 
 export default async function handler(req, res) {
-  const code = req.query.code;
+  const { code } = req.body;
 
   const tokenRes = await axios.post(
     "https://discord.com/api/oauth2/token",
@@ -22,13 +21,8 @@ export default async function handler(req, res) {
     }
   });
 
-  res.setHeader(
-    "Set-Cookie",
-    serialize("vault_user", JSON.stringify(userRes.data), {
-      path: "/",
-      httpOnly: true
-    })
-  );
-
-  res.redirect("/dashboard");
+  res.json({
+    token: tokenRes.data.access_token,
+    user: userRes.data
+  });
 }

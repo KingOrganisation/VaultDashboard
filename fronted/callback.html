@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Logging in...</title>
+</head>
+<body>
+  <h2>Logging into Vault...</h2>
+
+<script>
+async function login() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+
+  const res = await fetch("https://vault-dashboard-zeta.vercel.app/api/auth/callback", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code })
+  });
+
+  const data = await res.json();
+
+  localStorage.setItem("vault_token", data.token);
+
+  window.location.href = "/dashboard.html";
+}
+
+login();
+</script>
+
+</body>
+</html>
